@@ -1,0 +1,9 @@
+type Transaction @entity {
+  id: ID!
+  to: Bytes!
+  amount: BigInt!
+  unlockTime: Int!
+  signatureCount: Int!
+  signers: [Bytes!]!
+  executed: Boolean!
+}

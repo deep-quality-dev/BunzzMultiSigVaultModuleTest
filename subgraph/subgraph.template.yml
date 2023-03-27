@@ -1,0 +1,34 @@
+specVersion: 0.0.2
+repository: https://github.com/deep-quality-dev/BunzzMultiSigVaultTest
+schema:
+  file: ./schema.graphql
+features:
+  - nonFatalErrors
+dataSources:
+  - kind: ethereum/contract
+    name: MultiSigVault
+    network: {{ network }}
+    source:
+      address: "{{ MultiSigVault_address }}"
+      abi: MultiSigVault
+      startBlock: {{ MultiSigVault_start_block }}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - Transaction
+        - Account
+      abis:
+        - name: MultiSigVault
+          file: ./abis/MultiSigVault.json
+      eventHandlers:
+        - event: TransactionCreated(indexed address,indexed address,uint256,uint256,uint256)
+          handler: handleTransactionCreated
+        - event: TransactionSigned(indexed address,uint256)
+          handler: handleTransactionSigned
+        - event: TransactionRejected(indexed address,uint256)
+          handler: handleTransactionRejected
+        - event: TransactionCompleted(indexed address,indexed address,uint256,uint256,uint256)
+          handler: handleTransactionCompleted
+      file: ./src/mapping.vault.ts
